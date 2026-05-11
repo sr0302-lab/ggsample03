@@ -14,7 +14,7 @@
 // シェーダー関連の処理
 #include "shader.h"
 
-//　追加分1
+//　修正箇所（数学関数用）
 #include <cmath>
 
 //
@@ -97,8 +97,7 @@ static void frustum(GLfloat* m, float left, float right, float bottom, float top
 static void perspective(GLfloat* m, float fovy, float aspect, float zNear, float zFar)
 {
   // 【宿題】ここを解答してください（loadIdentity() を置き換えてください）
-  //　loadIdentity(m);
-  //　追加分2
+  //　修正箇所
   const float f = 1.0f / std::tan(fovy * 0.5f);
 
   m[0] = f / aspect;
@@ -133,8 +132,7 @@ static void perspective(GLfloat* m, float fovy, float aspect, float zNear, float
 static void lookat(GLfloat* m, float ex, float ey, float ez, float tx, float ty, float tz, float ux, float uy, float uz)
 {
   // 【宿題】ここを解答してください（loadIdentity() を置き換えてください）
-  //　loadIdentity(m);
-  //　追加分3
+  //　修正箇所
   float fx = tx - ex;
   float fy = ty - ey;
   float fz = tz - ez;
@@ -257,7 +255,7 @@ int GgApp::main(int argc, const char* const* argv)
 
     // uniform 変数 mc に変換行列 mc を設定する
     // 【宿題】ここを解答してください（uniform 変数 mc のインデックスは変数 mcLoc に入っています）
-    //　追加分4
+    //　修正箇所
     glUniformMatrix4fv(mcLoc, 1, GL_FALSE, mc);
 
     // 描画に使う頂点配列オブジェクトの指定
