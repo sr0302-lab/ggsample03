@@ -1,11 +1,11 @@
 #version 410 core
 
 in vec4 pv;
-//　追加分1
+//　修正箇所
 uniform mat4 mc;
 
 void main(void)
 {
-  //　追加分2
+  //　修正箇所
   gl_Position = mc * pv;
 }
