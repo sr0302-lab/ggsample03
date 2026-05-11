@@ -14,6 +14,9 @@
 // シェーダー関連の処理
 #include "shader.h"
 
+//　追加分1
+#include <cmath>
+
 //
 // 4 行 4 列の行列の積を求める
 //
@@ -94,7 +97,29 @@ static void frustum(GLfloat* m, float left, float right, float bottom, float top
 static void perspective(GLfloat* m, float fovy, float aspect, float zNear, float zFar)
 {
   // 【宿題】ここを解答してください（loadIdentity() を置き換えてください）
-  loadIdentity(m);
+  //　loadIdentity(m);
+  //　追加分2
+  const float f = 1.0f / std::tan(fovy * 0.5f);
+
+  m[0] = f / aspect;
+  m[1] = 0.0f;
+  m[2] = 0.0f;
+  m[3] = 0.0f;
+
+  m[4] = 0.0f;
+  m[5] = f;
+  m[6] = 0.0f;
+  m[7] = 0.0f;
+
+  m[8] = 0.0f;
+  m[9] = 0.0f;
+  m[10] = -(zFar + zNear) / (zFar - zNear);
+  m[11] = -1.0f;
+
+  m[12] = 0.0f;
+  m[13] = 0.0f;
+  m[14] = -2.0f * zFar * zNear / (zFar - zNear);
+  m[15] = 0.0f;
 }
 
 //
@@ -108,7 +133,49 @@ static void perspective(GLfloat* m, float fovy, float aspect, float zNear, float
 static void lookat(GLfloat* m, float ex, float ey, float ez, float tx, float ty, float tz, float ux, float uy, float uz)
 {
   // 【宿題】ここを解答してください（loadIdentity() を置き換えてください）
-  loadIdentity(m);
+  //　loadIdentity(m);
+  //　追加分3
+  float fx = tx - ex;
+  float fy = ty - ey;
+  float fz = tz - ez;
+
+  float r = std::sqrt(fx * fx + fy * fy + fz * fz);
+  fx /= r;
+  fy /= r;
+  fz /= r;
+
+  float sx = fy * uz - fz * uy;
+  float sy = fz * ux - fx * uz;
+  float sz = fx * uy - fy * ux;
+
+  r = std::sqrt(sx * sx + sy * sy + sz * sz);
+  sx /= r;
+  sy /= r;
+  sz /= r;
+
+  float vx = sy * fz - sz * fy;
+  float vy = sz * fx - sx * fz;
+  float vz = sx * fy - sy * fx;
+
+  m[0] = sx;
+  m[1] = vx;
+  m[2] = -fx;
+  m[3] = 0.0f;
+
+  m[4] = sy;
+  m[5] = vy;
+  m[6] = -fy;
+  m[7] = 0.0f;
+
+  m[8] = sz;
+  m[9] = vz;
+  m[10] = -fz;
+  m[11] = 0.0f;
+
+  m[12] = -(sx * ex + sy * ey + sz * ez);
+  m[13] = -(vx * ex + vy * ey + vz * ez);
+  m[14] = fx * ex + fy * ey + fz * ez;
+  m[15] = 1.0f;
 }
 
 //
@@ -190,6 +257,8 @@ int GgApp::main(int argc, const char* const* argv)
 
     // uniform 変数 mc に変換行列 mc を設定する
     // 【宿題】ここを解答してください（uniform 変数 mc のインデックスは変数 mcLoc に入っています）
+    //　追加分4
+    glUniformMatrix4fv(mcLoc, 1, GL_FALSE, mc);
 
     // 描画に使う頂点配列オブジェクトの指定
     glBindVertexArray(vao);
